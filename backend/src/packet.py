@@ -27,6 +27,7 @@ import os
 import sys
 import numpy as np
 from dataclasses import dataclass
+from btrgb import Btrgb
 
 # Local Imports
 from rgbio import load_image, load_array, save_array, create_temp_file
@@ -84,6 +85,7 @@ class Packet:
         wscale            : white patch scale value
         mo_matrix         : MO calibration matrix
         m_refl_matrix     : spectral transformation M matrix
+        btrgb             : btrgb object for storing output data
     """
     files: list
     swap: list
@@ -93,6 +95,7 @@ class Packet:
     wscale: float
     mo_matrix: np.ndarray
     m_refl_matrix: np.ndarray
+    btrgb: Btrgb
 
 @dataclass
 class Target:
@@ -116,7 +119,7 @@ class Target:
     xyz_ref: np.ndarray
 
 
-def genpacket(files: list, target: Target, outpath: str) -> Packet:
+def genpacket(files: list, target: Target, outpath: str, btrgb) -> Packet:
     """ Initialize packet with default values and loaded images
     images will be in swap after this
     [in] files  : list of files we are working with
@@ -126,7 +129,7 @@ def genpacket(files: list, target: Target, outpath: str) -> Packet:
     swap = __genswap(len(files) // 2)
     subjptr = (__TARGET_A_IDX, __TARGET_B_IDX)
     pkt = Packet(files, swap, outpath, subjptr,
-                 target, 0.0, None, None)
+                 target, 0.0, None, None, btrgb)
     __loadswap(pkt)
     return pkt
 

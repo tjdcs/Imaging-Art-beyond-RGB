@@ -66,6 +66,7 @@ def processing_pipeline(packet):
         preprocess(packet)
         res = render(packet)
         save_image(res, packet.outpath, basename)
+        packet.btrgb.create_output_file(basename + ".tiff", "CM")
         del res
         gc.collect()
         # increment pointer
