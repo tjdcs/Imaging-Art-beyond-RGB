@@ -20,6 +20,14 @@ jobs:
         echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
         eval "$(/opt/homebrew/bin/brew shellenv)"
     
+    - name: Debug PATH and Commands Before
+      run: |
+        echo "Current PATH: $PATH"
+        which python3 || echo "python3 not found"
+        which node || echo "node not found"
+        which npm || echo "npm not found"
+        ls -al $(npm config get prefix)/bin || echo "npm bin not found"
+
     - name: Install Python 3.9.6
       run: |
         brew install python@3.9
@@ -35,9 +43,9 @@ jobs:
 
     - name: Set Python
       run: |
-        npm config set python $(which python3)
+        export PYTHON=$(which python3)
 
-    - name: Debug PATH and Commands
+    - name: Debug PATH and Commands After
       run: |
         echo "Current PATH: $PATH"
         which python3 || echo "python3 not found"
@@ -48,6 +56,14 @@ jobs:
     - name: Install dependencies
       run: |
         brew install git cmake pkg-config node
+    
+    - name: Debug PATH and Commands After Dependencies
+      run: |
+        echo "Current PATH: $PATH"
+        which python3 || echo "python3 not found"
+        which node || echo "node not found"
+        which npm || echo "npm not found"
+        ls -al $(npm config get prefix)/bin || echo "npm bin not found"
 
     - name: Print directory structure before configuring backend
       run: |
