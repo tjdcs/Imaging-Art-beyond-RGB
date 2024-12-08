@@ -24,10 +24,51 @@ jobs:
       run: |
         brew install git cmake pkg-config node
 
-    - name: Clone repository and configure backend
+    - name: Print directory structure before configuring backend
       run: |
+        echo "Directory structure BEFORE configuring backend:"
+        ls -R ${{ github.workspace }}
+
+    - name: Configure backend
+      run: |
+        # Set macOS version
+        macOS_vers_num=10.15
+
+        # Navigate to backend directory
         cd ${{ github.workspace }}/backend
-        sh osx_config_environment.sh
+
+        # Check if vcpkg is properly set up
+        if ! [ -f "vcpkg/bootstrap-vcpkg.sh" ]; then
+          echo "vcpkg not set up or incomplete, initializing..."
+          rm -rf vcpkg  # Ensure a clean state
+          git clone https://github.com/microsoft/vcpkg
+          sh vcpkg/bootstrap-vcpkg.sh
+
+          # Append minimum macOS version to vcpkg/triplets/x64-osx.cmake
+          echo "set(VCPKG_C_FLAGS -mmacosx-version-min=$macOS_vers_num)" >> vcpkg/triplets/x64-osx.cmake
+          echo "set(VCPKG_CXX_FLAGS -mmacosx-version-min=$macOS_vers_num)" >> vcpkg/triplets/x64-osx.cmake
+        fi
+
+        # Check for vcpkg updates
+        cd vcpkg
+        git pull --ff-only
+        sh bootstrap-vcpkg.sh
+        cd ..
+
+        # Install dependencies
+        export MACOSX_DEPLOYMENT_TARGET=$macOS_vers_num
+        export VCPKG_OSX_DEPLOYMENT_TARGET=$macOS_vers_num
+        export VCPKG_KEEP_ENV_VARS="VCPKG_OSX_DEPLOYMENT_TARGET;MACOSX_DEPLOYMENT_TARGET"
+        packages=$(cat "dependencies.txt")
+        for p in $packages
+        do
+          ./vcpkg/vcpkg install $p
+        done
+
+    - name: Print directory structure after configuring backend
+      run: |
+        echo "Directory structure AFTER configuring backend:"
+        ls -R ${{ github.workspace }}
 
     - name: Set up frontend
       run: |
