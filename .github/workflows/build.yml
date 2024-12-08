@@ -3,7 +3,7 @@ name: Build and Release on macOS
 on:
   push:
     branches:
-      - develop
+      - actions
   pull_request:
 
 jobs:
