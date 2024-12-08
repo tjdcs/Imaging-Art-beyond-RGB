@@ -125,6 +125,7 @@ jobs:
         export PYTHON=$(which python3)
         cd ${{ github.workspace }}/frontend
         echo "Using Python for npm: $PYTHON"
+        npm config set python python3.9
         npm ci
 
     - name: Build backend
