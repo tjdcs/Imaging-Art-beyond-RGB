@@ -28,10 +28,12 @@ jobs:
         which npm || echo "npm not found"
         ls -al $(npm config get prefix)/bin || echo "npm bin not found"
 
-    - name: Install Python 3.9.6
+    - name: Install Python 3.9 and Update PATH
       run: |
         brew install python@3.9
         echo 'export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"' >> ~/.zprofile
+        echo 'export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"' >> ~/.bash_profile
+        export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"
         source ~/.zprofile
         python3 --version
   
@@ -41,9 +43,15 @@ jobs:
     #    node-version: '20.x'
     #    cache: 'npm'
 
-    - name: Set Python
+    #- name: Set Python
+    #  run: |
+    #    export PYTHON=$(which python3)
+    
+    - name: Debug Python Version and PATH
       run: |
-        export PYTHON=$(which python3)
+        which python3
+        python3 --version
+        echo "Current PATH: $PATH"
 
     - name: Debug PATH and Commands After
       run: |
@@ -113,7 +121,10 @@ jobs:
 
     - name: Set up frontend
       run: |
+        export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"
+        export PYTHON=$(which python3)
         cd ${{ github.workspace }}/frontend
+        echo "Using Python for npm: $PYTHON"
         npm ci
 
     - name: Build backend
