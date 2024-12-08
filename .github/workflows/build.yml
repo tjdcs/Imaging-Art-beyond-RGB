@@ -13,19 +13,19 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
+    
     - name: Install Homebrew
       run: |
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
         eval "$(/opt/homebrew/bin/brew shellenv)"
     
-        - name: Install Python 3.9.6
-        run: |
-          brew install python@3.9
-          echo 'export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"' >> ~/.zprofile
-          source ~/.zprofile
-          python3 --version
+    - name: Install Python 3.9.6
+      run: |
+        brew install python@3.9
+        echo 'export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"' >> ~/.zprofile
+        source ~/.zprofile
+        python3 --version
   
     - name: Use Node.js LTS
       uses: actions/setup-node@v3
@@ -36,6 +36,14 @@ jobs:
     - name: Set Python
       run: |
         npm config set python $(which python3)
+
+    - name: Debug PATH and Commands
+      run: |
+        echo "Current PATH: $PATH"
+        which python3 || echo "python3 not found"
+        which node || echo "node not found"
+        which npm || echo "npm not found"
+        ls -al $(npm config get prefix)/bin || echo "npm bin not found"
 
     - name: Install dependencies
       run: |
