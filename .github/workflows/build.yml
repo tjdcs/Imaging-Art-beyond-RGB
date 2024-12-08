@@ -27,11 +27,11 @@ jobs:
         source ~/.zprofile
         python3 --version
   
-    - name: Use Node.js LTS
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20.x'
-        cache: 'npm'
+    #- name: Use Node.js LTS
+    #  uses: actions/setup-node@v3
+    #  with:
+    #    node-version: '20.x'
+    #    cache: 'npm'
 
     - name: Set Python
       run: |
