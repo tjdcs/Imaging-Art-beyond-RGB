@@ -5,6 +5,8 @@ on:
     branches:
       - actions
   pull_request:
+    branches:
+      - actions
 
 jobs:
   build-and-release:
