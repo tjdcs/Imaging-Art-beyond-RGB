@@ -130,9 +130,9 @@ jobs:
     - name: Set up frontend
       run: |
         export PATH="/opt/homebrew/opt/python@3.12/bin:$PATH"
-        export PYTHON=$(which python3)
-        cd ${{ github.workspace }}/frontend
+        export PYTHON="/opt/homebrew/opt/python@3.12/bin/python3.12"
         echo "Using Python for npm: $PYTHON"
+        cd ${{ github.workspace }}/frontend
         npm ci
 
     - name: Build backend
