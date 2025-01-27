@@ -121,12 +121,6 @@ jobs:
         echo "Directory structure AFTER configuring backend:"
         ls -R ${{ github.workspace }}
 
-    - name: Set Python for npm globally
-      run: |
-        export PATH="/opt/homebrew/opt/python@3.12/bin:$PATH"
-        npm config set python /opt/homebrew/opt/python@3.12/bin/python3.12
-        npm config get python
-
     - name: Debug Python Version and PATH
       run: |
         which python3
