@@ -28,12 +28,12 @@ jobs:
         which npm || echo "npm not found"
         ls -al $(npm config get prefix)/bin || echo "npm bin not found"
 
-    - name: Install Python 3.9 and Update PATH
+    - name: Install Python 3.12 and Update PATH
       run: |
-        brew install python@3.9
-        echo 'export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"' >> ~/.zprofile
-        echo 'export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"' >> ~/.bash_profile
-        export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"
+        brew install python@3.12
+        echo 'export PATH="/opt/homebrew/opt/python@3.12/bin:$PATH"' >> ~/.zprofile
+        echo 'export PATH="/opt/homebrew/opt/python@3.12/bin:$PATH"' >> ~/.bash_profile
+        export PATH="/opt/homebrew/opt/python@3.12/bin:$PATH"
         source ~/.zprofile
         python3 --version
   
@@ -121,8 +121,8 @@ jobs:
 
     - name: Set Python for npm globally
       run: |
-        export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"
-        npm config set python /opt/homebrew/opt/python@3.9/bin/python3.9
+        export PATH="/opt/homebrew/opt/python@3.12/bin:$PATH"
+        npm config set python /opt/homebrew/opt/python@3.12/bin/python3.12
         npm config get python
 
     - name: Debug Python Version and PATH
@@ -133,7 +133,7 @@ jobs:
 
     - name: Set up frontend
       run: |
-        export PATH="/opt/homebrew/opt/python@3.9/bin:$PATH"
+        export PATH="/opt/homebrew/opt/python@3.12/bin:$PATH"
         export PYTHON=$(which python3)
         cd ${{ github.workspace }}/frontend
         echo "Using Python for npm: $PYTHON"
