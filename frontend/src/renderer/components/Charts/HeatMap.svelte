@@ -54,7 +54,9 @@
       <input type="checkbox" class="peer" bind:checked={visionDeficiencyMode} >
       <label>Grayscale</label>
     </span>
-    <AtomicHeatMap on:datapointselect={handleDataPointSelect} data={mapData} visionDeficiencyMode={visionDeficiencyMode}></AtomicHeatMap>
+     <div style="display: flex; align-items: center;">
+        <AtomicHeatMap on:datapointselect={handleDataPointSelect} data={mapData} visionDeficiencyMode={visionDeficiencyMode}></AtomicHeatMap>
+     </div>
   </div>
 {/if}
 
