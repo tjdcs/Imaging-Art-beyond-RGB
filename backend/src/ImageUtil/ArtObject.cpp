@@ -3,7 +3,7 @@
 namespace btrgb {
 
     ArtObject::ArtObject(std::string ref_file, IlluminantType ilumination, ObserverType observer, std::string output_directory, bool batch) {
-        this->ref_data = new RefData(ref_file, ilumination, observer);
+        this->ref_data = new RefData(ref_file, ilumination, observer, batch);
 
         bool is_windows = output_directory.front() != '/';
         if( is_windows && output_directory.back() != '\\' )

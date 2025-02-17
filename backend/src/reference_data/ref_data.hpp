@@ -9,6 +9,12 @@
 #include "illuminants.hpp"
 #include "standard_observer.hpp"
 #include "white_points.hpp"
+#include <vector>
+#include <string>
+#include <fstream>
+#include <iostream>
+#include <filesystem>
+
 
 #define REF_COUNT 4
 
@@ -22,16 +28,55 @@ typedef StandardObserver::ObserverType ObserverType;
 * and provide Tristimulus/CIELAB values
 */
 class RefData: public CSVParser {
-	const std::string ref_files[REF_COUNT] = {
-		"APT_Reflectance_Data.csv",
-		"CC_Classic_Reflectance_Data.csv",
-		"CCSG_Reflectance_Data.csv",
-		"NGT_Reflectance_Data.csv"
-	};
+	std::vector<std::string> ref_files; // Use a vector instead of a fixed-size array
+	std::string dataFilePath;           // Path to the file where the reference list is saved
 
 public:
-	RefData(std::string file_path, IlluminantType illum_type = IlluminantType::D50, ObserverType so_type = ObserverType::SO_1931);
+	RefData(const std::string& file, IlluminantType illum_type = IlluminantType::D50, ObserverType so_type = ObserverType::SO_1931, bool batch = false);
+
+
+
 	~RefData();
+
+
+
+
+
+bool addCustomRefData(const std::string& new_ref_data) {
+	// Add the new reference data file to the list
+	ref_files.push_back(new_ref_data);
+	return saveRefDataList(); // Save the updated list to file
+}
+
+bool saveRefDataList() const {
+	// Save the current list of reference data files to the specified data file
+	std::ofstream file_out(dataFilePath);
+	if (!file_out) {
+		std::cerr << "Error: Unable to open file for writing: " << dataFilePath << std::endl;
+		return false;
+	}
+
+	for (const auto& ref_file : ref_files) {
+		file_out << ref_file << std::endl;
+	}
+
+	file_out.close();
+	return true;
+}
+
+
+bool loadRefDataList() {
+	namespace fs = std::filesystem;
+
+	for (const auto& entry : fs::directory_iterator(dataFilePath)) {
+		if (entry.is_regular_file()) { // Check if the entry is a file
+			// Add the full path of the file to the list
+			ref_files.push_back(entry.path().string());
+		}
+	}
+	return true;
+}
+
 
 	static IlluminantType get_illuminant(std::string illuminant_string);
 	static ObserverType get_observer(int observer_num);
@@ -170,6 +215,8 @@ public:
 	 */
 	cv::Mat xyz_as_matrix();
 
+	void RefDataFolder(const std::string folder);
+
 
 private:
 	/**
@@ -212,6 +259,10 @@ private:
 
 	bool is_custom(std::string file);
 
+	void save_last_used_file(const std::string& path);
+
+	void load_last_used_file();
+
 	ColorPatch*** color_patches;
 	StandardObserver* observer = nullptr;
 	Illuminants* illuminants = nullptr;
@@ -219,6 +270,9 @@ private:
 	std::string f_name;
 	int row_count;
 	int col_count;
+	bool batch;
+
+
 
 	
 };

@@ -11,9 +11,10 @@
 		"libpng",
 		"cppcodec",
 		"jsoncons",
+		"libjpeg-turbo",
 		{
 			"name": "opencv4",
-			"default-features": false,
+			"default-features": true,
 			"features": []
 		}
 	],

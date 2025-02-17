@@ -71,7 +71,7 @@ void LibRawReader::_configLibRawParams() {
     opt->user_qual = 0;
 
     /* Use raw speed. */
-    /*opt->use_rawspeed = 1;*/
+    //opt->use_rawspeed = 1;
 
 }
 

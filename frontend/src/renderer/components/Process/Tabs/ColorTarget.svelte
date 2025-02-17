@@ -235,83 +235,87 @@
       addDataToTarget()
     }
     if ($processState.artStacks[0].verificationTarget && Object.keys($processState.artStacks[0].verificationTarget).length !== 0) {
-      addDataToTarget();
-    }
-    $processState.returnedFromProcessing = false;
+  addDataToTarget();
+  }
+  $processState.returnedFromProcessing = false;
   }
 
   // Add data to targets from $processState
   function addDataToTarget() {
-    if (!colorTarget) {
-      colorTarget = {
-        name: "Calibration Target",
-        rows: $processState.artStacks[0].colorTarget.rows,
-        cols: $processState.artStacks[0].colorTarget.cols,
-        color: Math.floor(Math.random() * (360 - 0 + 1) + 0),
-        size: $processState.artStacks[0].colorTarget.size,
-        whitePatch: {
-          row: $processState.artStacks[0].colorTarget.whitePatch.row,
-          col: $processState.artStacks[0].colorTarget.whitePatch.col,
-        },
-        refData: {
-          name: $processState.artStacks[0].colorTarget.refData.name,
-          standardObserver: $processState.artStacks[0].colorTarget.refData.standardObserver,
-          illuminants: $processState.artStacks[0].colorTarget.refData.illuminants,
-        },
-      };
-      colorPos = { top: $processState.artStacks[0].colorTarget.top, left: $processState.artStacks[0].colorTarget.left,
-         bottom: $processState.artStacks[0].colorTarget.bottom, right: $processState.artStacks[0].colorTarget.right };
-    } else if (!verifyTarget) {
-      verifyTarget = {
-        name: "Verification Target",
-        rows: $processState.artStacks[0].verificationTarget.rows,
-        cols: $processState.artStacks[0].verificationTarget.cols,
-        color: Math.floor(Math.random() * (360 - 0 + 1) + 0),
-        size: $processState.artStacks[0].verificationTarget.size,
-        whitePatch: {
-          row: $processState.artStacks[0].verificationTarget.whitePatch.row,
-          col: $processState.artStacks[0].verificationTarget.whitePatch.col,
-        },
-        refData: {
-          name: $processState.artStacks[0].verificationTarget.refData.name,
-          standardObserver: $processState.artStacks[0].verificationTarget.refData.standardObserver,
-          illuminants: $processState.artStacks[0].verificationTarget.refData.illuminants,
-        },
-      };
-      verifyPos = { top: $processState.artStacks[0].verificationTarget.top, left: $processState.artStacks[0].verificationTarget.left, 
-        bottom: $processState.artStacks[0].verificationTarget.bottom, right: $processState.artStacks[0].verificationTarget.right };
-    }
+  if (!colorTarget) {
+  colorTarget = {
+  name: "Calibration Target",
+  rows: $processState.artStacks[0].colorTarget.rows,
+  cols: $processState.artStacks[0].colorTarget.cols,
+  color: Math.floor(Math.random() * (360 - 0 + 1) + 0),
+  size: $processState.artStacks[0].colorTarget.size,
+  whitePatch: {
+  row: $processState.artStacks[0].colorTarget.whitePatch.row,
+  col: $processState.artStacks[0].colorTarget.whitePatch.col,
+  },
+  refData: {
+  name: $processState.artStacks[0].colorTarget.refData.name,
+  standardObserver: $processState.artStacks[0].colorTarget.refData.standardObserver,
+  illuminants: $processState.artStacks[0].colorTarget.refData.illuminants,
+  },
+  };
+  colorPos = { top: $processState.artStacks[0].colorTarget.top, left: $processState.artStacks[0].colorTarget.left,
+  bottom: $processState.artStacks[0].colorTarget.bottom, right: $processState.artStacks[0].colorTarget.right };
+  } else if (!verifyTarget) {
+  verifyTarget = {
+  name: "Verification Target",
+  rows: $processState.artStacks[0].verificationTarget.rows,
+  cols: $processState.artStacks[0].verificationTarget.cols,
+  color: Math.floor(Math.random() * (360 - 0 + 1) + 0),
+  size: $processState.artStacks[0].verificationTarget.size,
+  whitePatch: {
+  row: $processState.artStacks[0].verificationTarget.whitePatch.row,
+  col: $processState.artStacks[0].verificationTarget.whitePatch.col,
+  },
+  refData: {
+  name: $processState.artStacks[0].verificationTarget.refData.name,
+  standardObserver: $processState.artStacks[0].verificationTarget.refData.standardObserver,
+  illuminants: $processState.artStacks[0].verificationTarget.refData.illuminants,
+  },
+  };
+  verifyPos = { top: $processState.artStacks[0].verificationTarget.top, left: $processState.artStacks[0].verificationTarget.left,
+  bottom: $processState.artStacks[0].verificationTarget.bottom, right: $processState.artStacks[0].verificationTarget.right };
+  }
   }
 
   $: if (colorTarget?.refData?.name === "Choose a custom file....csv") {
-    console.log("OPENING CUSTOM REF MODAL");
-    modal.set("CustomRefData");
-    colorTarget.refData.name = "CUSTOM DATA";
+  console.log("OPENING CUSTOM REF MODAL");
+  modal.set("CustomRefData");
+  let customFileName = colorTarget.refData.name.endsWith('.csv') ? colorTarget.refData.name : `${colorTarget.refData.name}.csv`;
+  refData.push(customFileName);
+  colorTarget.refData.name = "customFileName";
   }
   $: if (verifyTarget?.refData?.name === "Choose a custom file....csv") {
-    console.log("OPENING CUSTOM REF MODAL VER");
-    modal.set("CustomRefDataVer");
-    verifyTarget.refData.name = "CUSTOM DATA";
+  console.log("OPENING CUSTOM REF MODAL VER");
+  modal.set("CustomRefDataVer");
+  let customFileName = verifyTarget.refData.name.endsWith('.csv') ? verifyTarget.refData.name : `${verifyTarget.refData.name}.csv`;
+  refData.push(customFileName);
+  verifyTarget.refData.name = "CUSTOM DATA";
   }
 
   $: if (refData.includes(colorTarget?.refData?.name)) {
-    console.log("Setting Refdata ROW/COl");
-    let index = refData.findIndex((x) => x === colorTarget.refData.name);
+  console.log("Setting Refdata ROW/COl");
+  let index = refData.findIndex((x) => x === colorTarget.refData.name);
 
-    colorTarget.rows = refDataMeta[index].rows;
-    colorTarget.cols = refDataMeta[index].cols;
+  colorTarget.rows = refDataMeta[index].rows;
+  colorTarget.cols = refDataMeta[index].cols;
   }
   $: if (refData.includes(verifyTarget?.refData?.name)) {
-    let index = refData.findIndex((x) => x === verifyTarget.refData.name);
+  let index = refData.findIndex((x) => x === verifyTarget.refData.name);
 
-    verifyTarget.rows = refDataMeta[index].rows;
-    verifyTarget.cols = refDataMeta[index].cols;
+  verifyTarget.rows = refDataMeta[index].rows;
+  verifyTarget.cols = refDataMeta[index].cols;
   }
 
   $: console.log({ LOADING: loading });
 
   $: if (
-    colorTarget &&
+  colorTarget &&
     colorTarget.refData.name !== "---None---.csv" &&
     (!verifyTarget || verifyTarget.refData?.name !== "---None---.csv") &&
     colorTarget?.whitePatch?.row &&

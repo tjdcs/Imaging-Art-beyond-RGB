@@ -219,3 +219,6 @@ typings/
 out/
 
 public/
+
+#Vcpkg
+*/vcpkg_installed/
