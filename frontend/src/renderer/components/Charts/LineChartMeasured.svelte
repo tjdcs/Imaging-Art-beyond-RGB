@@ -51,16 +51,11 @@ $: if (data.length > 1) {
 
   const options = {
       series: [],
-      markers: {
-          size: 4,
-          strokeColors:['#FFFFFF','#000000']
-      },
       stroke: {
           show: true,
           curve: 'smooth',
           width: 2,
       },
-      colors: ["#FFFFFF"],
       chart: {
           background: '#4A4A4C',
           animations: {
@@ -89,14 +84,16 @@ $: if (data.length > 1) {
           }
       },
       tooltip: {
-          shared: false,
-          intersect: true,
+          shared: true,
+          intersect: false,
           theme: 'dark',
           x: {
               show: false
           },
           y: {
-              formatter: undefined,
+              formatter: function(value) {
+                return `${value.toFixed(2)}%`;
+              },
               title: {
                   formatter: (seriesName, info) => seriesName,
               }
