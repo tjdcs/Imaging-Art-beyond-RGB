@@ -18,14 +18,14 @@ find_package(jsoncons CONFIG REQUIRED)
 find_package(libpng CONFIG REQUIRED)
 find_path(CPPCODEC_INCLUDE_DIRS "cppcodec/base32_crockford.hpp")
 
-set(OpenCV_DIR "${VCPKG_INSTALLED_DIR}/x64-windows/share/opencv4")
-find_package(OpenCV REQUIRED)
+if(${VCPKG_TARGET_TRIPLET} STREQUAL "x64-windows")
+    set(OpenCV_DIR "${VCPKG_INSTALLED_DIR}/x64-windows/share/opencv4")
+    set(PNG_DIR "${VCPKG_INSTALLED_DIR}/x64-windows/share/png")
+endif()
 
 include_directories(${OpenCV_INCLUDE_DIRS})
-
-set(PNG_DIR "${VCPKG_INSTALLED_DIR}/x64-windows/share/png")
+find_package(OpenCV REQUIRED)
 find_package(PNG REQUIRED)
-
 
 # LCMS and LibRAW
 find_package(lcms REQUIRED)
